@@ -1,5 +1,8 @@
+from flask import Flask, request, jsonify
 from difflib import SequenceMatcher
 import pandas as pd
+
+app = Flask(__name__)
 
 # Load the song database from the provided CSV file
 song_data = pd.read_csv('SongCSV.csv')
@@ -39,17 +42,15 @@ def generate_recommendation(user_songs, song_data):
 
     return recommended_song
 
-def main():
-    # Read user input for favorite songs
-    user_input = input("Enter your favorite songs (separated by commas): ")
-    user_songs = [song.strip() for song in user_input.split(',')]
-
-    # Convert user input songs to DataFrame for easier comparison
-    user_song_data = pd.DataFrame([{'Title': song} for song in user_songs])
+@app.route('/recommend', methods=['POST'])
+def recommend():
+    # Get user input for favorite songs
+    user_input = request.json.get('favorite_songs', [])
+    user_songs = pd.DataFrame([{'Title': song} for song in user_input])
 
     # Generate recommendation based on user's favorite songs
-    recommendation = generate_recommendation(user_song_data, song_data)
-    print("Recommended song:", recommendation)
+    recommendation = generate_recommendation(user_songs, song_data)
+    return jsonify({'recommended_song': recommendation})
 
 if __name__ == '__main__':
-    main()
+    app.run(debug=True)
