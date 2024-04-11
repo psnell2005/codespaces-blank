@@ -1,26 +1,30 @@
 from flask import Flask, request, jsonify
 from difflib import SequenceMatcher
 import pandas as pd
+import os
 
 app = Flask(__name__)
 
-# Load the song database from the provided CSV file
-song_data = pd.read_csv('SongCSV.csv')
+# Since the script is inside 'Core', the CSV file is in the same directory
+csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'SongCSV.csv')
+song_data = pd.read_csv(csv_path)
+
+# Rest of your code remains the same...
+
+song_data = pd.read_csv(csv_path)
 
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
 def calculate_similarity(song1, song2):
-    # Calculate similarity based on multiple attributes
     title_similarity = similar(song1['Title'], song2['Title'])
     artist_similarity = similar(song1['ArtistName'], song2['ArtistName'])
-    year_similarity = 1 if song1['Year'] == song2['Year'] else 0  # 1 if same year, 0 otherwise
+    year_similarity = 1 if song1['Year'] == song2['Year'] else 0
     tempo_similarity = similar(str(song1['Tempo']), str(song2['Tempo']))
     danceability_similarity = similar(str(song1['Danceability']), str(song2['Danceability']))
-    time_signature_similarity = 1 if song1['TimeSignature'] == song2['TimeSignature'] else 0  # 1 if same time signature, 0 otherwise
-    key_signature_similarity = 1 if song1['KeySignature'] == song2['KeySignature'] else 0  # 1 if same key signature, 0 otherwise
+    time_signature_similarity = 1 if song1['TimeSignature'] == song2['TimeSignature'] else 0
+    key_signature_similarity = 1 if song1['KeySignature'] == song2['KeySignature'] else 0
 
-    # Aggregate similarities (you can adjust weights for each attribute as needed)
     total_similarity = (title_similarity + artist_similarity + year_similarity +
                         tempo_similarity + danceability_similarity +
                         time_signature_similarity + key_signature_similarity) / 7
@@ -44,13 +48,11 @@ def generate_recommendation(user_songs, song_data):
 
 @app.route('/recommend', methods=['POST'])
 def recommend():
-    # Get user input for favorite songs
     user_input = request.json.get('favorite_songs', [])
-    user_songs = pd.DataFrame([{'Title': song} for song in user_input])
+    user_songs = pd.DataFrame(user_input)
 
-    # Generate recommendation based on user's favorite songs
     recommendation = generate_recommendation(user_songs, song_data)
     return jsonify({'recommended_song': recommendation})
 
 if __name__ == '__main__':
-    main()
+    app.run(debug=True)  # Added debug=True for easier debugging
