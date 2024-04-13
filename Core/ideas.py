@@ -5,10 +5,10 @@ from sklearn.neighbors import NearestNeighbors
 data = pd.read_csv('song_data.csv')
 
 # Select the relevant features for similarity calculation
-features = ['Danceability', 'KeySignature', 'Tempo', 'TimeSignature']
+features = ['Genre', 'KeySignature', 'Tempo', 'TimeSignature']
 
 # Create a KNN model
-k = 5  # Number of nearest neighbors to consider
+k = 10  # Number of nearest neighbors to consider
 model = NearestNeighbors(n_neighbors=k, algorithm='auto')
 model.fit(data[features])
 
