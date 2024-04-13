@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 # Load the song database from the provided CSV file
 song_data = pd.read_csv('SongCSV.csv')
+print(song_data)
 
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
