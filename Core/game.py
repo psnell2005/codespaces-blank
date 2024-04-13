@@ -5,8 +5,13 @@ import os
 
 app = Flask(__name__)
 
-# Load the song database from the provided CSV file
-song_data = pd.read_csv('SongCSV.csv')
+# Since the script is inside 'Core', the CSV file is in the same directory
+csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'SongCSV.csv')
+song_data = pd.read_csv(csv_path)
+
+# Rest of your code remains the same...
+
+song_data = pd.read_csv(csv_path)
 
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
