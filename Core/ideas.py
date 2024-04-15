@@ -46,7 +46,7 @@ def suggest_similar_songs(liked_song):
     return similar_songs_info
 
 # Example usage
-liked_song = "b'Da Funk'"
+liked_song = "b'Heaven Can Wait'"
 similar_songs = suggest_similar_songs(liked_song)
 print(f"Songs similar to '{liked_song}':")
 for song, artist, year in similar_songs:
