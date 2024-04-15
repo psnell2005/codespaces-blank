@@ -8,12 +8,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function searchSongs(query) {
+        // Fetch the CSV file using Fetch API
         fetch('SongCSV.csv')
             .then(response => response.text())
             .then(csvData => {
                 var lines = csvData.split('\n');
                 var songs = lines.map(line => line.split(','));
-                var songTitles = songs[16];
+
+      
+                var songTitles = songs.map(row => row[16]); 
+
                 var matchingSongs = songTitles.filter(title => title.toLowerCase().includes(query));
 
                 displayResults(matchingSongs);
