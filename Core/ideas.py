@@ -1,6 +1,17 @@
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 import os
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run(debug=True, port= 8080)
+
 
 
 csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'SongCSV.csv')
@@ -35,7 +46,7 @@ def suggest_similar_songs(liked_song):
     return similar_songs_info
 
 # Example usage
-liked_song = "b'Soul Deep'"
+liked_song = "b'Da Funk'"
 similar_songs = suggest_similar_songs(liked_song)
 print(f"Songs similar to '{liked_song}':")
 for song, artist, year in similar_songs:
