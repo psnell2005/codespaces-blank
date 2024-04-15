@@ -12,8 +12,6 @@ def index():
 if __name__ == '__main__':
     app.run(debug=True, port= 8080)
 
-
-
 csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'SongCSV.csv')
 # Load the song data into a pandas DataFrame
 data = pd.read_csv(csv_path)
