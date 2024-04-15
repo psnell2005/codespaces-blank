@@ -23,14 +23,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     var cells = line.split(',');
 
                     // Check if the song title matches the query
-                    if (cells[16].toLowerCase().includes(query)) { // Assuming song title is in the 17th column (zero-based index)
-                        // Create a table row with song information
+                    if (cells[16].toLowerCase().includes(query)) { 
                         tableRows += '<tr>';
-                        tableRows += '<td>' + cells[0] + '</td>'; // Song number (assuming it's in the first column)
-                        tableRows += '<td>' + cells[16] + '</td>'; // Title
-                        tableRows += '<td>' + cells[1] + '</td>'; // Artist (assuming it's in the second column)
-                        tableRows += '<td>' + cells[3] + '</td>'; // Album (assuming it's in the fourth column)
-                        tableRows += '<td>' + cells[5] + '</td>'; // Year (assuming it's in the sixth column)
+                        tableRows += '<td>' + cells[0] + '</td>'; 
+                        tableRows += '<td>' + cells[16] + '</td>'; 
+                        tableRows += '<td>' + cells[1] + '</td>'; 
+                        tableRows += '<td>' + cells[3] + '</td>'; 
+                        tableRows += '<td>' + cells[17] + '</td>'; 
                         tableRows += '</tr>';
                     }
                 });
@@ -41,4 +40,3 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error fetching CSV file:', error));
     });
 });
-
