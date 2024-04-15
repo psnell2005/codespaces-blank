@@ -8,17 +8,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src=”search.js”></script>
 </head>
 <body>
     <div class=”container”>
         <div class=”row”>
             <div class="col-md-12">
-                <h1 class=>Find Songs!</h1>
+                <h1 class=>Song Search</h1>
                 <h2 class=>Enter the Song</h2>
                 <form id=”form”>
-                    <input class=”form-control” id=”user-input” placeholder="Enter Song">
-                    <button id=”button” class=”btn btn-secondary”>Find Songs!</button>
+                    <input type="text" id="searchInput" placeholder="Enter song title...">
+                    <ul id="searchResults"></ul>
+                    <script src="search.js"></script>
                 </form>
                 <table class="table" cellpadding="10">
                 <thead>

@@ -1,31 +1,43 @@
-// d3.csv('SongCSV.csv').then(function (data) {
-//     var songs = data;
-//     var button = d3.select('#button');
-//     var form = d3.select('#form');
+document.addEventListener('DOMContentLoaded', function () {
+    var searchInput = document.getElementById('searchInput');
+    var searchResults = document.getElementById('searchResults');
 
-//     button.on('click', runEnter);
-//     form.on('submit', function(event) {
-//         event.preventDefault();  
-//         runEnter();
-//     });
+    searchInput.addEventListener('input', function () {
+        var query = searchInput.value.toLowerCase();
+        searchSongs(query);
+    });
 
-//     function runEnter() {
-//         d3.select('tbody').html(''); 
+    function searchSongs(query) {
+        // Fetch the CSV file using Fetch API
+        fetch('SongCSV.csv')
+            .then(response => response.text())
+            .then(csvData => {
+                // Parse CSV data
+                var lines = csvData.split('\n');
+                var songs = lines.map(line => line.split(','));
 
-//         var inputValue = d3.select('#user-input').property('value');
-//         var filteredSongs = songs.filter(song => song.artists.includes(inputValue));
-        
-//         var output = _.sortBy(filteredSongs, 'avg_vote').reverse();
+    
+                var songTitles = songs[16];
 
-//         for (var i = 0; i < filteredSongs.length; i++) {
-//             d3.select('tbody').append('tr').html(
-//                 '<td>' + (i+1) + '</td>' +
-//                 '<td>' + (output[i].song_title) + '</td>' +
-//                 '<td>' + (output[i].artist) + '</td>' +
-//                 '<td>' + (output[i].year) + '</td>' +
-//                 '<td>' + (output[i].album) + '</td>' 
-//             );
-//         }
-//     }
-// });
+                // Filter song titles based on query
+                var matchingSongs = songTitles.filter(title => title.toLowerCase().includes(query));
+
+                // Display matching songs
+                displayResults(matchingSongs);
+            })
+            .catch(error => console.error('Error fetching CSV file:', error));
+    }
+
+    function displayResults(songs) {
+        // Clear previous search results
+        searchResults.innerHTML = '';
+
+        // Display each matching song
+        songs.forEach(song => {
+            var listItem = document.createElement('li');
+            listItem.textContent = song;
+            searchResults.appendChild(listItem);
+        });
+    }
+});
 
