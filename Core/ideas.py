@@ -1,8 +1,10 @@
+import os 
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 
-# Load the song data into a pandas DataFrame
-data = pd.read_csv('song_data.csv')
+csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'SongCSV.csv')
+song_data = pd.read_csv(csv_path)
+data = pd.read_csv(csv_path)
 
 # Select the relevant features for similarity calculation
 features = ['Danceability', 'KeySignature', 'Tempo', 'TimeSignature']
