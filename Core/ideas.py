@@ -1,11 +1,20 @@
 import os 
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run(debug=True, port = 8080)
 
 
 csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'SongCSV.csv')
 data = pd.read_csv(csv_path)
-
 
 # Select the relevant features for similarity calculation
 features = ['Danceability', 'KeySignature', 'Tempo', 'TimeSignature', 'Year']
