@@ -6,7 +6,7 @@ app = Flask(__name__)
 @app.route('/data')
 def get_data():
     data = []
-    with open('data.csv', 'r') as file:
+    with open('SongCSV.csv', 'r') as file:
         csv_reader = csv.reader(file)
         for row in csv_reader:
             data.append(row)
