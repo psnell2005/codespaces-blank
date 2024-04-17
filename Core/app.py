@@ -3,7 +3,6 @@ from flask import Flask, jsonify, render_template
 import os
 import pandas as pd
 
-
 app = Flask(__name__)
 
 @app.route('/')
