@@ -10,7 +10,6 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-
 csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'SongCSV.csv')
 
 @app.route('/data')
