@@ -43,6 +43,11 @@ function renderTable(data) {
     headerRow.innerHTML = '';
     tbody.innerHTML = '';
 
+    if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3">No results found</td></tr>';
+        return;
+    }
+
     // Create table header
     Object.keys(data[0]).forEach(function(column) {
         const th = document.createElement('th');
