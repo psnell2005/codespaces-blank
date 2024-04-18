@@ -1,69 +1,33 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Fetch initial data
-    fetchData();
-
-    // Search form submission handler
-    document.getElementById('form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent default form submission behavior
-        const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-        if (searchTerm) {
-            searchSongs(searchTerm);
-        } else {
-            fetchData(); // If search term is empty, fetch all data
-        }
-    });
-});
-
-function fetchData() {
     axios.get('/data')
         .then(function(response) {
-            renderTable(response.data);
+            const data = response.data;
+            const table = document.getElementById('dataTable');
+            const headerRow = table.querySelector('thead tr');
+            const tbody = table.querySelector('tbody');
+
+            // Create table header
+            data[0].forEach(function(column) {
+                const th = document.createElement('th');
+                th.textContent = column;
+                headerRow.appendChild(th);
+            });
+
+            // Create table rows
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                const tr = document.createElement('tr');
+
+                row.forEach(function(cell) {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+
+                tbody.appendChild(tr);
+            }
         })
         .catch(function(error) {
             console.error('Error fetching data:', error);
         });
-}
-
-function searchSongs(searchTerm) {
-    axios.get(`/search?term=${searchTerm}`)
-        .then(function(response) {
-            renderTable(response.data);
-        })
-        .catch(function(error) {
-            console.error('Error searching songs:', error);
-        });
-}
-
-function renderTable(data) {
-    const table = document.getElementById('dataTable');
-    const headerRow = table.querySelector('thead tr');
-    const tbody = table.querySelector('tbody');
-
-    // Clear existing table content
-    headerRow.innerHTML = '';
-    tbody.innerHTML = '';
-
-    if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3">No results found</td></tr>';
-        return;
-    }
-
-    // Create table header
-    Object.keys(data[0]).forEach(function(column) {
-        const th = document.createElement('th');
-        th.textContent = column;
-        headerRow.appendChild(th);
-    });
-
-    // Create table rows
-    data.forEach(function(row, index) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${index + 1}</td>`; // Row number
-        Object.values(row).forEach(function(cell) {
-            const td = document.createElement('td');
-            td.textContent = cell;
-            tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-    });
-}
+});
