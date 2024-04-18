@@ -1,70 +1,64 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Fetch initial data
+    fetchData();
+
+    // Search form submission handler
+    document.getElementById('form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission behavior
+        const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+        if (searchTerm) {
+            searchSongs(searchTerm);
+        } else {
+            fetchData(); // If search term is empty, fetch all data
+        }
+    });
+});
+
+function fetchData() {
     axios.get('/data')
         .then(function(response) {
-            const data = response.data;
-            const table = document.getElementById('dataTable');
-            const headerRow = table.querySelector('thead tr');
-            const tbody = table.querySelector('tbody');
-
-            // Create table header
-            data[0].forEach(function(column) {
-                const th = document.createElement('th');
-                th.textContent = column;
-                headerRow.appendChild(th);
-            });
-
-            // Create table rows
-            for (let i = 1; i < data.length; i++) {
-                const row = data[i];
-                const tr = document.createElement('tr');
-
-                row.forEach(function(cell) {
-                    const td = document.createElement('td');
-                    td.textContent = cell;
-                    tr.appendChild(td);
-                });
-
-                tbody.appendChild(tr);
-            }
+            renderTable(response.data);
         })
         .catch(function(error) {
             console.error('Error fetching data:', error);
         });
-});
+}
 
-// document.addEventListener('DOMContentLoaded', function() {
-//     axios.get('/data')
-//         .then(function(response) {
-//             const data = response.data;
-//             const table = document.getElementById('dataTable');
-//             const headerRow = table.querySelector('thead tr');
-//             const tbody = table.querySelector('tbody');
+function searchSongs(searchTerm) {
+    axios.get(`/search?term=${searchTerm}`)
+        .then(function(response) {
+            renderTable(response.data);
+        })
+        .catch(function(error) {
+            console.error('Error searching songs:', error);
+        });
+}
 
-//             // Clear existing table content
-//             headerRow.innerHTML = '';
-//             tbody.innerHTML = '';
+function renderTable(data) {
+    const table = document.getElementById('dataTable');
+    const headerRow = table.querySelector('thead tr');
+    const tbody = table.querySelector('tbody');
 
-//             // Create table header
-//             Object.keys(data[0]).forEach(function(column) {
-//                 const th = document.createElement('th');
-//                 th.textContent = column;
-//                 headerRow.appendChild(th);
-//             });
+    // Clear existing table content
+    headerRow.innerHTML = '';
+    tbody.innerHTML = '';
 
-//             // Create table rows
-//             data.forEach(function(row) {
-//                 const tr = document.createElement('tr');
+    // Create table header
+    Object.keys(data[0]).forEach(function(column) {
+        const th = document.createElement('th');
+        th.textContent = column;
+        headerRow.appendChild(th);
+    });
 
-//                 Object.values(row).forEach(function(cell) {
-//                     const td = document.createElement('td');
-//                     td.textContent = cell;
-//                     tr.appendChild(td);
-//                 });
-
-//                 tbody.appendChild(tr);
-//             });
-//         })
-//         .catch(function(error) {
-//             console.error('Error fetching data:', error);
-//         });
-// });
+    // Create table rows
+    data.forEach(function(row, index) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${index + 1}</td>`; // Row number
+        Object.values(row).forEach(function(cell) {
+            const td = document.createElement('td');
+            td.textContent = cell;
+            tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+    });
+}
