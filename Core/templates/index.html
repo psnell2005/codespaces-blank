@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Music Search Website </title>
+    <title>Music Search Website</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -28,6 +28,15 @@
                     </thead>
                     <tbody id="searchTableBody">
                         <!-- Table body content will be dynamically populated here -->
+                        {% for song in songs %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ song['Title'] }}</td>
+                            <td>{{ song['ArtistName'] }}</td>
+                            <td>{{ song['Album'] }}</td>
+                            <td>{{ song['Year'] }}</td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
