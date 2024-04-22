@@ -25,10 +25,7 @@ def search_songs():
     if term:
         filtered_data = data[data['Title'].str.lower().str.contains(term)]
         result = filtered_data.to_dict(orient='records')
-        result = [
-            {k: str(v)[2:] if isinstance(v, str) and v.startswith("b'") else v for k, v in row.items()}
-            for row in result
-        ]
+        result = [{k: None if pd.isna(v) else v for k, v in row.items()} for row in result]
         print(f"Search results for term '{term}':")
         print(result)
         return jsonify(result)
