@@ -44,11 +44,11 @@ document.addEventListener('DOMContentLoaded', function() {
             row.appendChild(titleCell);
 
             const artistCell = document.createElement('td');
-            artistCell.textContent = song.Artist;
+            artistCell.textContent = song.ArtistName;
             row.appendChild(artistCell);
 
             const albumCell = document.createElement('td');
-            albumCell.textContent = song.Album;
+            albumCell.textContent = song.AlbumName;
             row.appendChild(albumCell);
 
             const yearCell = document.createElement('td');
