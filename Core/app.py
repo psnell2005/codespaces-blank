@@ -27,11 +27,16 @@ def search_songs():
         result = filtered_data.to_dict(orient='records')
         result = [
             {
-                k: None if pd.isna(v) else str(v)[2:] if isinstance(v, str) and v.startswith("b'") else v
+                k: None if pd.isna(v) else v.decode('utf-8')[:-1] if isinstance(v, bytes) else str(v)[:-1] if isinstance(v, str) and v.endswith("'") else v
                 for k, v in row.items()
             }
             for row in result
         ]
+        # Remove b' prefix from byte strings
+        for item in result:
+            for key, value in item.items():
+                if isinstance(value, str) and value.startswith("b'"):
+                    item[key] = value[2:]
         print(f"Search results for term '{term}':")
         print(result)
         return jsonify(result)
