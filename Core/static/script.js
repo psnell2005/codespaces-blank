@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('form');
     const searchInput = document.getElementById('searchInput');
     const searchTableBody = document.getElementById('searchTableBody');
+    const songInfoContainer = document.getElementById('songInfoContainer');
     var apiKey = 'AIzaSyClloF0D3qkEsd9yeCNtp_jAZ6GidZ_y2U';
   
 
@@ -42,8 +43,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const row = document.createElement('tr');
         row.style.cursor = 'pointer';
         row.addEventListener('click', function() {
-          const searchTerm = `${song.Title} ${song.ArtistName}`;
-          searchOnYouTube(searchTerm);
+          displaySongInfo(song);
+          // const searchTerm = `${song.Title} ${song.ArtistName}`;
+          // searchOnYouTube(searchTerm);
         });
   
         const indexCell = document.createElement('td');
@@ -69,6 +71,16 @@ document.addEventListener('DOMContentLoaded', function() {
         searchTableBody.appendChild(row);
       });
     }
+
+    function displaySongInfo(song) {
+      // Create HTML elements to display song info
+      const title = document.createElement('p');
+      title.textContent = "Title: " + song.Title;
+
+      // Clear previous song info and append new song info
+      songInfoContainer.innerHTML = '';
+      songInfoContainer.appendChild(title);
+  }
   
     function searchOnYouTube(searchTerm) {
       gapi.client.youtube.search.list({
