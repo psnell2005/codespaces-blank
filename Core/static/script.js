@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateSearchTable(searchResults);
           } else {
             console.error('Search results are not an array:', searchResults);
-            updateSearchTable([]); // Pass an empty array to clear the table
+            updateSearchTable([]); 
           }
         })
         .catch(function(error) {

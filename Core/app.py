@@ -23,7 +23,7 @@ def get_data():
 def search_songs():
     term = request.args.get('term', '').lower()
     if term:
-        filtered_data = data[data['Title'].str.lower().str.contains(term)]
+        filtered_data = data[(data['Title'].str.lower().str.contains(term)) | (data['ArtistName'].str.lower().str.contains(term))]
         result = filtered_data.to_dict(orient='records')
         result = [
             {
