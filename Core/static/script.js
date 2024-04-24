@@ -44,8 +44,6 @@ document.addEventListener('DOMContentLoaded', function() {
         row.style.cursor = 'pointer';
         row.addEventListener('click', function() {
           displaySongInfo(song);
-          // const searchTerm = `${song.Title} ${song.ArtistName}`;
-          // searchOnYouTube(searchTerm);
         });
   
         const indexCell = document.createElement('td');
@@ -73,14 +71,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displaySongInfo(song) {
-      // Create HTML elements to display song info
-      const title = document.createElement('p');
-      title.textContent = "Title: " + song.Title;
-
+      const title = `${song.Title} by ${song.ArtistName}`;
+      const link = document.createElement('a');
+      link.textContent = title;
+      link.href = '#'; 
+      link.addEventListener('click', function(event) {
+        event.preventDefault();
+        const searchTerm = `${song.Title} ${song.ArtistName}`;
+        searchOnYouTube(searchTerm);
+      });
       // Clear previous song info and append new song info
       songInfoContainer.innerHTML = '';
-      songInfoContainer.appendChild(title);
-  }
+      songInfoContainer.appendChild(link);
+    }
   
     function searchOnYouTube(searchTerm) {
       gapi.client.youtube.search.list({
