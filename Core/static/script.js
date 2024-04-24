@@ -38,6 +38,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   
     function updateSearchTable(results) {
+      const resultCount = results.length;
+      const countText = `Number of results: ${resultCount}`;
+      const countElement = document.createElement('div');
+      countElement.textContent = countText;
+      searchTableBody.parentNode.insertBefore(countElement, searchTableBody);
+    
       searchTableBody.innerHTML = '';
       results.forEach(function(song, index) {
         const row = document.createElement('tr');
@@ -45,27 +51,27 @@ document.addEventListener('DOMContentLoaded', function() {
         row.addEventListener('click', function() {
           displaySongInfo(song);
         });
-  
+    
         const indexCell = document.createElement('td');
         indexCell.textContent = index + 1;
         row.appendChild(indexCell);
-  
+    
         const titleCell = document.createElement('td');
         titleCell.textContent = song.Title;
         row.appendChild(titleCell);
-  
+    
         const artistCell = document.createElement('td');
         artistCell.textContent = song.ArtistName;
         row.appendChild(artistCell);
-  
+    
         const albumCell = document.createElement('td');
         albumCell.textContent = song.AlbumName;
         row.appendChild(albumCell);
-  
+    
         const yearCell = document.createElement('td');
         yearCell.textContent = song.Year;
         row.appendChild(yearCell);
-  
+    
         searchTableBody.appendChild(row);
       });
     }
