@@ -86,12 +86,45 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         const searchTerm = `${song.Title} ${song.ArtistName}`;
         searchOnYouTube(searchTerm);
+        getSimilarSongs(song.Title);
       });
       // Clear previous song info and append new song info
       songInfoContainer.innerHTML = '';
       songInfoContainer.appendChild(link);
     }
+
+    function getSimilarSongs(likedSong) {
+      console.log('Getting similar songs for:', likedSong);
+      axios.post('/get_similar_songs', { likedSong })
+        .then(function(response) {
+          const similarSongs = response.data;
+          console.log("Similar songs:", similarSongs);
+          updateSimilarSongsUI(similarSongs);
+        })
+        .catch(function(error) {
+          console.error('Error getting similar songs:', error);
+        });
+    }
+
+    function updateSimilarSongsUI(similarSongs) {
+      console.log('Updating UI with similar songs:', similarSongs);
+      // Clear previous similar songs
+      const similarSongsContainer = document.getElementById('similarSongsContainer');
+      similarSongsContainer.innerHTML = '';
   
+      // Create and append similar songs elements
+      const similarSongsHeading = document.createElement('h3');
+      similarSongsHeading.textContent = 'Similar Songs:';
+      similarSongsContainer.appendChild(similarSongsHeading);
+  
+      const similarSongsList = document.createElement('ul');
+      similarSongs.forEach(function(song) {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${song.title} by ${song.artist} (${song.year})`;
+        similarSongsList.appendChild(listItem);
+      });
+      similarSongsContainer.appendChild(similarSongsList);
+    }
     function searchOnYouTube(searchTerm) {
       gapi.client.youtube.search.list({
         q: searchTerm,
