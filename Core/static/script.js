@@ -90,9 +90,12 @@ document.addEventListener('DOMContentLoaded', function() {
       link.href = '#'; 
       link.addEventListener('click', function(event) {
           event.preventDefault();
-          const searchTerm = `${song.Title} ${song.ArtistName}`;
-          searchOnYouTube(searchTerm);
           getSimilarSongs(song.Title);
+          const searchYouTubeBtn = document.getElementById('searchYouTubeBtn');
+            searchYouTubeBtn.style.display = 'inline-block';
+            searchYouTubeBtn.onclick = function() {
+                searchOnYouTube(searchTerm);
+            };
       });
       // Clear previous song info and append new song info
       songInfoContainer.innerHTML = '';
@@ -119,6 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const similarSongsContainer = document.getElementById('similarSongsContainer');
       similarSongsContainer.innerHTML = '';
       if (similarSongs.length > 0 ) {
+        
           // Create and append similar songs elements
           const similarSongsTable = document.createElement('table');
           similarSongsTable.classList.add('table');
@@ -140,6 +144,11 @@ document.addEventListener('DOMContentLoaded', function() {
           const tableBody = document.createElement('tbody');
           similarSongs.forEach(function(song) {
               const row = document.createElement('tr');
+              row.style.cursor = 'pointer';
+              row.addEventListener('click', function() {
+                  const searchTerm = `${song.title} ${song.artist}`;
+                  searchOnYouTube(searchTerm);
+              });
               const titleCell = document.createElement('td');
               titleCell.textContent = song.title;
               const artistCell = document.createElement('td');

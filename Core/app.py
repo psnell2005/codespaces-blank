@@ -55,7 +55,6 @@ def load_data_and_build_model():
     model = NearestNeighbors(n_neighbors=k, algorithm='auto')
     model.fit(data[features])
     return model, data, features
-
 model, data, features = load_data_and_build_model()
 
 # Function to suggest similar songs based on a liked song
@@ -68,18 +67,10 @@ def suggest_similar_songs(liked_song, data, features, model):
     print(f"Liked song index: {liked_song_index}")
     
     if not liked_song_index.empty:
-        print(f"Similar songs for '{liked_song}':")
         liked_song_features = data.loc[liked_song_index[0], features].values.reshape(1, -1)
-        print(f"Liked song features: {liked_song_features}")
-        
         distances, indices = model.kneighbors(liked_song_features)
-        print(f"Distances: {distances}")
-        print(f"Indices: {indices}")
-        
         similar_songs_info = [(data.loc[index, 'Title'], data.loc[index, 'ArtistName'], data.loc[index, 'Year']) for index in indices[0]]
         similar_songs_info = similar_songs_info[1:]  # Exclude the input song itself
-        
-        print(f"Similar songs info: {similar_songs_info}")
         return similar_songs_info
     else:
         print(f"No similar songs found for '{liked_song}'")
@@ -94,10 +85,8 @@ def get_similar_songs():
     try:
         liked_song = request.json.get('likedSong')
         logger.info(f"Received likedSong: {liked_song}")
-        
         similar_songs = suggest_similar_songs(liked_song, data, features, model)
         logger.info(f"Similar songs: {similar_songs}")
-        
         similar_songs_list = [{'title': song[0], 'artist': song[1], 'year': int(song[2])} for song in similar_songs]
         logger.info(f"Similar songs list: {similar_songs_list}")
         
@@ -106,7 +95,6 @@ def get_similar_songs():
         logger.error(f"Error in get_similar_songs: {str(e)}")
         logger.error(traceback.format_exc())
         return jsonify({"error": "Internal Server Error"}), 500
-
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
