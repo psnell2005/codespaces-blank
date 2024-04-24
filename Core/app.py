@@ -3,6 +3,8 @@ from flask import Flask, jsonify, render_template, request
 import pandas as pd
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
+import traceback
+import logging
 
 app = Flask(__name__)
 
@@ -58,24 +60,53 @@ model, data, features = load_data_and_build_model()
 
 # Function to suggest similar songs based on a liked song
 def suggest_similar_songs(liked_song, data, features, model):
+    print(f"Finding similar songs for '{liked_song}'")
+    print(f"Data shape: {data.shape}")
+    print(f"Features: {features}")
+    
     liked_song_index = data[data['Title'] == liked_song].index
+    print(f"Liked song index: {liked_song_index}")
+    
     if not liked_song_index.empty:
+        print(f"Similar songs for '{liked_song}':")
         liked_song_features = data.loc[liked_song_index[0], features].values.reshape(1, -1)
+        print(f"Liked song features: {liked_song_features}")
+        
         distances, indices = model.kneighbors(liked_song_features)
-        # Get the info of the similar songs
+        print(f"Distances: {distances}")
+        print(f"Indices: {indices}")
+        
         similar_songs_info = [(data.loc[index, 'Title'], data.loc[index, 'ArtistName'], data.loc[index, 'Year']) for index in indices[0]]
         similar_songs_info = similar_songs_info[1:]  # Exclude the input song itself
+        
+        print(f"Similar songs info: {similar_songs_info}")
         return similar_songs_info
     else:
+        print(f"No similar songs found for '{liked_song}'")
         return []
+
+logging.basicConfig(level=logging.ERROR)
+logger = logging.getLogger(__name__)
 
 # Flask route to get similar songs
 @app.route('/get_similar_songs', methods=['POST'])
 def get_similar_songs():
-    liked_song = request.json.get('likedSong')
-    similar_songs = suggest_similar_songs(liked_song, data, features, model)
-    similar_songs_list = [{'title': song[0], 'artist': song[1], 'year': song[2]} for song in similar_songs]
-    return jsonify(similar_songs_list)
+    try:
+        liked_song = request.json.get('likedSong')
+        logger.info(f"Received likedSong: {liked_song}")
+        
+        similar_songs = suggest_similar_songs(liked_song, data, features, model)
+        logger.info(f"Similar songs: {similar_songs}")
+        
+        similar_songs_list = [{'title': song[0], 'artist': song[1], 'year': int(song[2])} for song in similar_songs]
+        logger.info(f"Similar songs list: {similar_songs_list}")
+        
+        return jsonify(similar_songs_list)
+    except Exception as e:
+        logger.error(f"Error in get_similar_songs: {str(e)}")
+        logger.error(traceback.format_exc())
+        return jsonify({"error": "Internal Server Error"}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)

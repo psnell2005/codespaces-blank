@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
       axios.post('/get_similar_songs', { likedSong })
         .then(function(response) {
           const similarSongs = response.data;
+          console.log("Response from server:", response);
           console.log("Similar songs:", similarSongs);
           updateSimilarSongsUI(similarSongs);
         })
@@ -111,20 +112,49 @@ document.addEventListener('DOMContentLoaded', function() {
       // Clear previous similar songs
       const similarSongsContainer = document.getElementById('similarSongsContainer');
       similarSongsContainer.innerHTML = '';
-  
-      // Create and append similar songs elements
-      const similarSongsHeading = document.createElement('h3');
-      similarSongsHeading.textContent = 'Similar Songs:';
-      similarSongsContainer.appendChild(similarSongsHeading);
-  
-      const similarSongsList = document.createElement('ul');
-      similarSongs.forEach(function(song) {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${song.title} by ${song.artist} (${song.year})`;
-        similarSongsList.appendChild(listItem);
-      });
-      similarSongsContainer.appendChild(similarSongsList);
+      if (similarSongs.length > 0 ) {
+        // Create and append similar songs elements
+        const similarSongsTable = document.createElement('table');
+        similarSongsTable.classList.add('table');
+
+        const tableHead = document.createElement('thead');
+        const headRow = document.createElement('tr');
+        const titleHeader = document.createElement('th');
+        titleHeader.textContent = 'Title';
+        const artistHeader = document.createElement('th');
+        artistHeader.textContent = 'Artist';
+        const yearHeader = document.createElement('th');
+        yearHeader.textContent = 'Year';
+        headRow.appendChild(titleHeader);
+        headRow.appendChild(artistHeader);
+        headRow.appendChild(yearHeader);
+        tableHead.appendChild(headRow);
+        similarSongsTable.appendChild(tableHead);
+
+        const tableBody = document.createElement('tbody');
+        similarSongs.forEach(function(song) {
+          const row = document.createElement('tr');
+          const titleCell = document.createElement('td');
+          titleCell.textContent = song.title;
+          const artistCell = document.createElement('td');
+          artistCell.textContent = song.artist;
+          const yearCell = document.createElement('td');
+          yearCell.textContent = song.year;
+          row.appendChild(titleCell);
+          row.appendChild(artistCell);
+          row.appendChild(yearCell);
+          tableBody.appendChild(row);
+        });
+        similarSongsTable.appendChild(tableBody);
+        similarSongsContainer.appendChild(similarSongsTable);
+      } else {
+        const noSongsMessage = document.createElement('p');
+        noSongsMessage.textContent = 'No similar songs found.';
+        similarSongsContainer.appendChild(noSongsMessage);
+      }
     }
+
+
     function searchOnYouTube(searchTerm) {
       gapi.client.youtube.search.list({
         q: searchTerm,
@@ -134,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (searchResult.items.length > 0) {
           const firstVideo = searchResult.items[0];
           const videoUrl = `https://www.youtube.com/watch?v=${firstVideo.id.videoId}`;
-          window.location.href = videoUrl;
+          window.open(videoUrl, '_blank');
         } else {
           console.error('No videos found for the search term:', searchTerm);
         }
