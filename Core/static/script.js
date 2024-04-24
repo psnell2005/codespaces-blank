@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const searchTableBody = document.getElementById('searchTableBody');
     const songInfoContainer = document.getElementById('songInfoContainer');
+    
     var apiKey = 'AIzaSyClloF0D3qkEsd9yeCNtp_jAZ6GidZ_y2U';
   
 
