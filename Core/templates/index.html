@@ -1,52 +1,151 @@
-<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Music Search Web Test</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="/static/script.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src='https://apis.google.com/js/api.js'></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Search</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Montserrat', sans-serif;
+            color: #333;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        #searchInput:focus {
+            border-color: #e67e22;
+            box-shadow: 0 0 10px rgba(230, 126, 34, 0.3);
+        }
+        #searchResults {
+            list-style-type: none;
+            padding: 0;
+        }
+        .song-info-row {
+            background-color: #fff;
+            color: #333;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .song-info-row:hover {
+            background-color: #f0f0f0;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        .jumbotron {
+            background-image: linear-gradient(to right, #2c3e50, #34495e);
+            color: #fff;
+            padding: 150px 25px;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .jumbotron-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .jumbotron h1 {
+            font-size: 4em;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .jumbotron h2 {
+            font-size: 2.5em;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .jumbotron p {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        .jumbotron .btn {
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background-color: #e67e22;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #fff;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        .jumbotron .btn:hover {
+            background-color: #d35400;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+        .music-note {
+            font-size: 5em;
+            color: #e67e22;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+    <div class="jumbotron">
+        <div class="jumbotron-content">
+            <span class="music-note">&#9835;</span>
+            <h1>Music Search</h1>
+            <h2>Find Your Favorite Songs</h2>
+        </div>
+        <p>Enter a song title or artist name below to get started.</p>
+        <form id="form">
+            <input type="text" id="searchInput" placeholder="Search.." class="form-control">
+            <ul id="searchResults"></ul>
+        </form>
+        <button class="btn btn-primary" onclick="search()">Search</button>
+    </div>
+
+    <div class="container mt-5">
         <div class="row">
             <div class="col-md-12">
-                <h1>Song Search</h1>
-                <h2>Enter song title or Artist Name</h2>
-                <form id="form">
-                    <input type="text" id="searchInput" placeholder="Search..">
-                    <ul id="searchResults"></ul>
-                </form>
-                <h2>Chosen Song:</h2>
+                <h2 class="text-center mb-4">Chosen Song:</h2>
                 <div id="songInfoContainer"></div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">Artist</th>
-                            <th scope="col">Album</th>
-                            <th scope="col">Year</th>
-                        </tr>
-                    </thead>
-                    <tbody id="searchTableBody">
-                        <tr class="song-info-row">
-                            <td>#</td>
-                            <td>Title</td>
-                            <td>Artist</td>
-                            <td>Album</td>
-                            <td>Year</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table mt-5">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Artist</th>
+                                <th scope="col">Album</th>
+                                <th scope="col">Year</th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchTableBody">
+                            <tr class="song-info-row">
+                                <td>#</td>
+                                <td>Title</td>
+                                <td>Artist</td>
+                                <td>Album</td>
+                                <td>Year</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/static/script.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
 </body>
 </html>
