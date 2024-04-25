@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     results.forEach(function(song, index) {
         const row = document.createElement('tr');
+        row.classList.add('song-info-row'); 
         row.style.cursor = 'pointer';
         row.addEventListener('click', function() {
             displaySongInfo(song);
@@ -152,6 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const tableBody = document.createElement('tbody');
           similarSongs.forEach(function(song) {
               const row = document.createElement('tr');
+              row.classList.add('similar-song-row');
               row.style.cursor = 'pointer';
               row.addEventListener('click', function() {
                   const searchTerm = `${song.title} ${song.artist}`;
