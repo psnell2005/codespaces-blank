@@ -20,6 +20,13 @@ document.addEventListener('DOMContentLoaded', function() {
       event.preventDefault();
       const searchTerm = searchInput.value.trim();
       console.log("Search term:", searchTerm);
+      const similarSongsContainer = document.getElementById('similarSongsContainer');
+      similarSongsContainer.innerHTML = '';
+      const songInfoContainer = document.getElementById('songInfoContainer')
+      songInfoContainer.innerHTML = '';
+      const searchYouTubeBtn = document.getElementById('searchYouTubeBtn');
+        searchYouTubeBtn.style.display = 'none';
+        searchYouTubeBtn.onclick = null;
       axios.get('/search', { params: { term: searchTerm } })
           .then(function(response) {
               const searchResults = response.data;
@@ -94,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const searchYouTubeBtn = document.getElementById('searchYouTubeBtn');
             searchYouTubeBtn.style.display = 'inline-block';
             searchYouTubeBtn.onclick = function() {
+                const searchTerm = `${song.Title} ${song.ArtistName}`;
                 searchOnYouTube(searchTerm);
             };
       });
